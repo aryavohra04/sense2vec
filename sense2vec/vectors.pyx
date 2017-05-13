@@ -140,6 +140,18 @@ cdef class VectorMap:
             freq = self.freqs[hashed]
             yield string, (freq, self.data[i])
 
+    def similarity(self, float[:] v1, float[:] v2):
+        '''Measure the similarity between two vectors, using cosine.
+        
+        Arguments:
+            v1 float[:]
+            v2 float[:]
+        Returns:
+            similarity_score -1<float<=1
+        '''
+        norm1 = get_l2_norm(&v1[0], len(v1))
+        norm2 = get_l2_norm(&v2[0], len(v2))
+        return cosine_similarity(&v1[0], &v2[0], norm1, norm2, len(v1))
     
     def most_similar(self, float[:] vector, int n=10):
         '''Find the keys of the N most similar entries, given a vector.
